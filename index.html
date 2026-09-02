@@ -110,6 +110,8 @@ html, body {
 .menuCard.card-bundeot h3 { color: #4C9BE8; }
 .menuCard.card-sodeot { border-color: #2ba84a; }
 .menuCard.card-sodeot h3 { color: #2ba84a; }
+.menuCard.card-bunsuds { border-color: #2ba84a; }
+.menuCard.card-bunsuds h3 { color: #2ba84a; }
 
 /* ---------- 각 활동 페이지 스타일 ---------- */
 /* ===== gadae ===== */
@@ -817,9 +819,57 @@ html, body {
     cursor: pointer;
   }
 #page-sodeot #sd-resetAllBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.35); transform: translate(3px,3px); }
+#page-sodeot #sd-problemBar {
+    margin: 18px 22px 0;
+    padding: 16px 20px;
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+  }
+#page-sodeot #sd-problemText {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #333;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+#page-sodeot #sd-problemText b {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 18px;
+    color: #2ba84a;
+    margin: 0 2px;
+  }
+#page-sodeot #sd-newProblemBtn {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 13px;
+    background: #4C9BE8;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: auto;
+  }
+#page-sodeot #sd-newProblemBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.3); transform: translate(2px,2px); }
+#page-sodeot #sd-matchBadge {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 12px;
+    background: #eee;
+    color: #888;
+  }
+#page-sodeot #sd-matchBadge.ok { background: #eafbee; color: #2ba84a; }
 #page-sodeot #sd-canvas {
     position: relative;
-    height: 480px;
+    height: 520px;
     flex-shrink: 0;
     overflow: hidden;
     background-color: #ffffff;
@@ -971,6 +1021,270 @@ html, body {
     border-radius: 3px;
     cursor: pointer;
   }
+#page-sodeot .refBar {
+    position: absolute;
+    background: #d9382b;
+    border: 3px solid #000;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    cursor: grab;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    touch-action: none;
+  }
+#page-sodeot .refBar:active { cursor: grabbing; }
+#page-sodeot .refBar .refWholeLabel { font-size: 22px; }
+#page-sodeot .refBar .refTag {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    font-size: 11px;
+    color: #d9382b;
+    font-family: 'Pretendard', sans-serif;
+    background: #fff;
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+#page-sodeot .confirmTag {
+    position: absolute;
+    font-size: 11px;
+    color: #4C9BE8;
+    font-family: 'Pretendard', sans-serif;
+  }
+#page-sodeot .confirmRow {
+    position: absolute;
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    max-width: 900px;
+  }
+#page-sodeot .confirmTile {
+    width: 30px;
+    height: 44px;
+    opacity: 0.85;
+    border: 2px solid #000;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 10px;
+    color: #fff;
+  }
+
+/* ===== bunsuds ===== */
+#page-bunsuds #fd-app { display: flex; flex-direction: column; min-height: 100%; }
+#page-bunsuds header {
+    padding: 14px 22px;
+    background: #3a3a3a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 5px solid #000;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+#page-bunsuds header h1 {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+#page-bunsuds header .sub {
+    font-size: 13px;
+    color: #cfcfcf;
+    margin-top: 4px;
+  }
+#page-bunsuds #fd-resetAllBtn {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 15px;
+    background: #ff5c5c;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.35);
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+#page-bunsuds #fd-resetAllBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.35); transform: translate(3px,3px); }
+#page-bunsuds #fd-problemBar {
+    margin: 18px 22px 0;
+    padding: 16px 20px;
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+  }
+#page-bunsuds #fd-problemText {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #333;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+#page-bunsuds .fracInline {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    line-height: 1.05;
+    margin: 0 3px;
+    vertical-align: middle;
+  }
+#page-bunsuds .fracInline .fnum, #page-bunsuds .fracInline .fden { padding: 0 3px; }
+#page-bunsuds .fracInline .fbar { width: 100%; border-top: 2px solid #222; margin: 1px 0; }
+#page-bunsuds .fracBigWrap .fracInline { font-size: 22px; }
+#page-bunsuds .fracBigWrap .wholeNum { font-family: 'DungGeunMo', 'Pretendard', sans-serif; font-size: 20px; }
+#page-bunsuds #fd-newProblemBtn {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 13px;
+    background: #2ba84a;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: auto;
+  }
+#page-bunsuds #fd-newProblemBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.3); transform: translate(2px,2px); }
+#page-bunsuds #fd-matchBadge {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 12px;
+    background: #eee;
+    color: #888;
+  }
+#page-bunsuds #fd-matchBadge.ok { background: #eafbee; color: #2ba84a; }
+#page-bunsuds #fd-canvas {
+    margin: 14px 22px 0;
+    padding: 20px;
+    background: #ffffff;
+    border: 3px solid #000;
+    border-radius: 8px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+#page-bunsuds .chainSection { display: flex; flex-direction: column; gap: 8px; }
+#page-bunsuds .chainHandle {
+    align-self: flex-start;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 6px 10px;
+    border-radius: 5px;
+    border: 3px solid #000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+  }
+#page-bunsuds .chainHandle .cvalue { font-size: 15px; }
+#page-bunsuds .chainHandle .miniReset {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 11px;
+    background: rgba(255,255,255,0.85);
+    color: #333;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+#page-bunsuds .chainRow { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-end; }
+#page-bunsuds .gridBox {
+    display: grid;
+    border: 3px solid var(--c);
+    border-radius: 4px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+#page-bunsuds .gridCell {
+    border-right: 1px dashed rgba(0,0,0,0.28);
+    border-bottom: 1px dashed rgba(0,0,0,0.28);
+    cursor: pointer;
+  }
+#page-bunsuds .gridCell.filled {
+    background: var(--c);
+    opacity: 0.78;
+  }
+#page-bunsuds #fd-worksheet {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 40px;
+  }
+#page-bunsuds .ws-box {
+    width: 480px;
+    max-width: 100%;
+    background: #fff;
+    border: 3px solid #222;
+    border-radius: 6px;
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.15);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 16px;
+    flex-wrap: wrap;
+  }
+#page-bunsuds .ws-input {
+    width: 40px;
+    height: 36px;
+    text-align: center;
+    font-size: 16px;
+    border: 2px solid #999;
+    border-radius: 4px;
+    font-family: 'Pretendard', sans-serif;
+  }
+#page-bunsuds .ws-input.ws-correct { border-color: #2ba84a; background: #eafbee; }
+#page-bunsuds .ws-input.ws-wrong { border-color: #e04b4b; background: #fdecec; }
+#page-bunsuds .miniFrac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 13px;
+  }
+#page-bunsuds .miniFrac .bar { width: 100%; border-top: 2px solid #222; margin: 1px 0; }
+#page-bunsuds #fd-checkBtn {
+    margin-top: 18px;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 15px;
+    background: #4C9BE8;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+#page-bunsuds #fd-checkBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.3); transform: translate(3px,3px); }
+#page-bunsuds #fd-checkResult {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    min-height: 20px;
+  }
+#page-bunsuds #fd-checkResult.ok { color: #2ba84a; }
+#page-bunsuds #fd-checkResult.no { color: #e04b4b; }
 </style>
 </head>
 <body>
@@ -978,6 +1292,7 @@ html, body {
   <button class="tabBtn active" data-page="home" type="button">🏠 홈</button>
   <button class="tabBtn" data-page="gadae" type="button">가분수를 대분수로</button>
   <button class="tabBtn" data-page="bundeot" type="button">분수의 덧셈</button>
+  <button class="tabBtn" data-page="bunsuds" type="button">분수의 덧셈과 뺄셈</button>
   <button class="tabBtn" data-page="sodeot" type="button">소수의 덧셈</button>
 </div>
 
@@ -994,6 +1309,11 @@ html, body {
       <span class="emoji">🔵</span>
       <h3>분수의 덧셈</h3>
       <p>막대를 색칠하고 겹쳐 비교하며<br>분수의 덧셈을 익혀요</p>
+    </div>
+    <div class="menuCard card-bunsuds" data-page="bunsuds">
+      <span class="emoji">🟢</span>
+      <h3>분수의 덧셈과 뺄셈</h3>
+      <p>대분수를 그림으로 나타내고<br>자동으로 나온 문제를 풀어요</p>
     </div>
     <div class="menuCard card-sodeot" data-page="sodeot">
       <span class="emoji">🟢</span>
@@ -1155,6 +1475,8 @@ html, body {
     <button id="sd-resetAllBtn">전체 초기화</button>
   </header>
 
+  <div id="sd-problemBar"></div>
+
   <div id="sd-canvas"></div>
 
   <div id="sd-worksheet">
@@ -1199,6 +1521,28 @@ html, body {
     </div>
     <button id="sd-checkBtn" type="button">정답 확인</button>
     <div id="sd-checkResult"></div>
+  </div>
+</div>
+</div>
+
+<div id="page-bunsuds" class="page page-tool">
+<div id="fd-app">
+  <header>
+    <div>
+      <h1>분수의 덧셈과 뺄셈</h1>
+      <div class="sub">칸을 터치해서 색칠 · 다시 터치하면 빠짐 · 대분수의 덧셈과 뺄셈을 그림으로 익혀요</div>
+    </div>
+    <button id="fd-resetAllBtn" type="button">전체 초기화</button>
+  </header>
+
+  <div id="fd-problemBar"></div>
+
+  <div id="fd-canvas"></div>
+
+  <div id="fd-worksheet">
+    <div class="ws-box" id="fd-answerBox"></div>
+    <button id="fd-checkBtn" type="button">정답 확인</button>
+    <div id="fd-checkResult"></div>
   </div>
 </div>
 </div>
@@ -1493,11 +1837,11 @@ html, body {
 
   function buildRefBar() {
     const bar = document.createElement('div');
-    bar.className = 'bd-refBar';
+    bar.className = 'refBar';
     bar.id = 'bd-refBar';
     bar.style.width = (denom * (COL_WIDTH + TILE_GAP) - TILE_GAP) + 'px';
     bar.style.left = '30px';
-    bar.style.top = '232px';
+    bar.style.top = '290px';
     bar.style.zIndex = topZ++;
     bar.innerHTML = '<span class="refTag">기준 막대 (드래그해서 비교)</span>' +
       '<span class="refWholeLabel">1</span>' +
@@ -1537,7 +1881,7 @@ html, body {
   function buildConfirmRow() {
     const tag = document.createElement('div');
     tag.id = 'bd-confirmTag';
-    tag.className = 'bd-confirmTag';
+    tag.className = 'confirmTag';
     tag.style.left = '30px';
     tag.style.top = '138px';
     tag.textContent = '확인: 1/n 조각으로 낱개 풀어보기';
@@ -1545,9 +1889,9 @@ html, body {
 
     const row = document.createElement('div');
     row.id = 'bd-confirmRow';
-    row.className = 'bd-confirmRow';
+    row.className = 'confirmRow';
     row.style.left = '30px';
-    row.style.top = '160px';
+    row.style.top = '195px';
     canvas.appendChild(row);
 
     renderConfirmTiles();
@@ -1587,7 +1931,7 @@ html, body {
     const box = document.createElement('div');
     box.className = 'remainderBox';
     box.style.left = '560px';
-    box.style.top = '150px';
+    box.style.top = '195px';
     box.innerHTML =
       '<span class="remainderLabel">1을 빼고 남은<br>낱개 조각 수</span>' +
       '<input type="text" id="bd-canvasRemainder" inputmode="numeric">';
@@ -1752,7 +2096,7 @@ html, body {
   document.getElementById('bd-resetAllBtn').addEventListener('click', () => {
     Object.values(squareRefs).forEach(sq => sq._reset && sq._reset());
     const bar = document.getElementById('bd-refBar');
-    if (bar) { bar.style.left = '30px'; bar.style.top = '232px'; }
+    if (bar) { bar.style.left = '30px'; bar.style.top = '290px'; }
     const rb = document.getElementById('bd-canvasRemainder');
     if (rb) { rb.value = ''; rb.classList.remove('rb-correct', 'rb-wrong'); }
     clearWorksheetInputs();
@@ -1808,8 +2152,15 @@ html, body {
 
 (function(){
   const canvas = document.getElementById('sd-canvas');
+  const problemBar = document.getElementById('sd-problemBar');
   const COL_WIDTH = 30; // px, must match column count math (300px / 10)
+  const TILE_GAP = 2; // must match .confirmRow's CSS gap
   let topZ = 10;
+  let target = { num1: 3, num2: 4 };
+
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
   const squares = [
     { id: 'sd-sq1', color: '#4CAF50', name: '①', left: 30,  top: 30 },
@@ -1854,7 +2205,7 @@ html, body {
       });
       const valText = count === 10 ? '1.0' : ('0.' + count);
       handle.querySelector('.value').textContent = valText;
-      if (typeof refreshWorksheet === 'function') refreshWorksheet();
+      refreshAll();
     }
 
     cols.querySelectorAll('.col').forEach(col => {
@@ -1913,8 +2264,130 @@ html, body {
     };
   });
 
-  document.getElementById('sd-resetAllBtn').addEventListener('click', () => {
-    document.querySelectorAll('#page-sodeot .square').forEach(sq => sq._reset && sq._reset());
+  const REF_BAR_TOP = 430;
+
+  function renderProblemBar() {
+    problemBar.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.id = 'sd-problemText';
+    wrap.innerHTML =
+      '이 덧셈을 만들어 보세요: <b>' + formatDecimal(target.num1) + '</b> + <b>' + formatDecimal(target.num2) + '</b>';
+    const badge = document.createElement('span');
+    badge.id = 'sd-matchBadge';
+    badge.textContent = '목표만큼 색칠해보세요';
+    const newBtn = document.createElement('button');
+    newBtn.id = 'sd-newProblemBtn';
+    newBtn.type = 'button';
+    newBtn.textContent = '새 문제';
+    newBtn.addEventListener('click', newProblem);
+    problemBar.appendChild(wrap);
+    problemBar.appendChild(badge);
+    problemBar.appendChild(newBtn);
+  }
+
+  function updateMatchBadge() {
+    const badge = document.getElementById('sd-matchBadge');
+    if (!badge) return;
+    const sq1 = document.getElementById('sd-sq1');
+    const sq2 = document.getElementById('sd-sq2');
+    const c1 = sq1 ? Number(sq1.dataset.count || 0) : 0;
+    const c2 = sq2 ? Number(sq2.dataset.count || 0) : 0;
+    if (c1 === target.num1 && c2 === target.num2) {
+      badge.textContent = '✅ 목표와 같아요!';
+      badge.classList.add('ok');
+    } else {
+      badge.textContent = '목표만큼 색칠해보세요';
+      badge.classList.remove('ok');
+    }
+  }
+
+  function buildRefBar() {
+    const bar = document.createElement('div');
+    bar.className = 'refBar';
+    bar.id = 'sd-refBar';
+    bar.style.width = (10 * (COL_WIDTH + TILE_GAP) - TILE_GAP) + 'px';
+    bar.style.height = '44px';
+    bar.style.left = '30px';
+    bar.style.top = REF_BAR_TOP + 'px';
+    bar.style.zIndex = topZ++;
+    bar.innerHTML = '<span class="refTag">기준 막대 (드래그해서 비교)</span>' +
+      '<span class="refWholeLabel">1</span>';
+    canvas.appendChild(bar);
+
+    bar.addEventListener('pointerdown', (e) => {
+      bar.style.zIndex = ++topZ;
+      const canvasRect = canvas.getBoundingClientRect();
+      const rect = bar.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      bar.setPointerCapture(e.pointerId);
+
+      function onMove(ev) {
+        let x = ev.clientX - canvasRect.left - offsetX;
+        let y = ev.clientY - canvasRect.top - offsetY;
+        x = Math.max(0, Math.min(canvas.clientWidth - bar.offsetWidth, x));
+        y = Math.max(0, Math.min(canvas.clientHeight - bar.offsetHeight, y));
+        bar.style.left = x + 'px';
+        bar.style.top = y + 'px';
+      }
+      function onUp() {
+        bar.removeEventListener('pointermove', onMove);
+        bar.removeEventListener('pointerup', onUp);
+        let x = parseFloat(bar.style.left);
+        const snapped = Math.round(x / COL_WIDTH) * COL_WIDTH;
+        bar.style.left = Math.max(0, Math.min(canvas.clientWidth - bar.offsetWidth, snapped)) + 'px';
+      }
+      bar.addEventListener('pointermove', onMove);
+      bar.addEventListener('pointerup', onUp);
+    });
+  }
+
+  function buildConfirmRow() {
+    const tag = document.createElement('div');
+    tag.id = 'sd-confirmTag';
+    tag.className = 'confirmTag';
+    tag.style.left = '30px';
+    tag.style.top = '338px';
+    tag.textContent = '확인: 0.1 조각으로 낱개 풀어보기';
+    canvas.appendChild(tag);
+
+    const row = document.createElement('div');
+    row.id = 'sd-confirmRow';
+    row.className = 'confirmRow';
+    row.style.left = '30px';
+    row.style.top = '360px';
+    canvas.appendChild(row);
+
+    renderConfirmTiles();
+  }
+
+  function renderConfirmTiles() {
+    const row = document.getElementById('sd-confirmRow');
+    if (!row) return;
+    row.innerHTML = '';
+    const sq1 = document.getElementById('sd-sq1');
+    const sq2 = document.getElementById('sd-sq2');
+    const c1 = sq1 ? Number(sq1.dataset.count || 0) : 0;
+    const c2 = sq2 ? Number(sq2.dataset.count || 0) : 0;
+    const total = c1 + c2;
+    const color1 = sq1 ? sq1.style.getPropertyValue('--c') : '#4CAF50';
+    const color2 = sq2 ? sq2.style.getPropertyValue('--c') : '#3B8FE0';
+    for (let i = 0; i < total; i++) {
+      const tile = document.createElement('div');
+      tile.className = 'confirmTile';
+      tile.style.background = i < c1 ? color1 : color2;
+      tile.textContent = '0.1';
+      row.appendChild(tile);
+    }
+  }
+
+  function refreshAll() {
+    refreshWorksheet();
+    updateMatchBadge();
+    renderConfirmTiles();
+  }
+
+  function clearWorksheetInputs() {
     ['sd-ws-unit1','sd-ws-unit2','sd-ws-sumval','sd-ws-totalunit','sd-ws-r-sum'].forEach(id => {
       const el = document.getElementById(id);
       el.value = '';
@@ -1922,6 +2395,27 @@ html, body {
     });
     document.getElementById('sd-checkResult').textContent = '';
     document.getElementById('sd-checkResult').className = '';
+  }
+
+  function newProblem() {
+    target = { num1: randInt(1, 9), num2: randInt(1, 9) };
+    canvas.querySelectorAll('.square').forEach(sq => sq._reset && sq._reset());
+    const bar = document.getElementById('sd-refBar');
+    if (bar) { bar.style.left = '30px'; bar.style.top = REF_BAR_TOP + 'px'; }
+    renderProblemBar();
+    clearWorksheetInputs();
+    refreshAll();
+  }
+
+  buildRefBar();
+  buildConfirmRow();
+
+  document.getElementById('sd-resetAllBtn').addEventListener('click', () => {
+    canvas.querySelectorAll('.square').forEach(sq => sq._reset && sq._reset());
+    const bar = document.getElementById('sd-refBar');
+    if (bar) { bar.style.left = '30px'; bar.style.top = REF_BAR_TOP + 'px'; }
+    clearWorksheetInputs();
+    refreshAll();
   });
 
   function formatDecimal(count) {
@@ -1990,7 +2484,310 @@ html, body {
     resultEl.className = allCorrect ? 'ok' : 'no';
   });
 
-  refreshWorksheet();
+  newProblem();
+})();
+
+
+// ===== bunsuds =====
+
+(function(){
+  const canvas = document.getElementById('fd-canvas');
+  const problemBar = document.getElementById('fd-problemBar');
+  const answerBox = document.getElementById('fd-answerBox');
+
+  let mode = '+';
+  let denom = 6;
+  let rows = 2, cols = 3;
+  let target = {}; // add: {whole1,frac1,whole2,frac2} / sub: {wholeA,fracA,wholeB,fracB}
+  const chains = {}; // key -> { count, max, color, cellEls: [] }
+
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function gridDims(d) {
+    let best = [1, d];
+    for (let r = 2; r * r <= d; r++) {
+      if (d % r === 0) best = [r, d / r];
+    }
+    return { rows: best[0], cols: best[1] };
+  }
+
+  function fracHTML(num, den) {
+    return '<span class="fracInline"><span class="fnum">' + num + '</span><span class="fbar"></span><span class="fden">' + den + '</span></span>';
+  }
+
+  function mixedHTML(whole, num, den) {
+    if (num === 0) return '<span class="wholeNum">' + whole + '</span>';
+    const wholePart = whole > 0 ? '<span class="wholeNum">' + whole + '</span>' : '';
+    return wholePart + fracHTML(num, den);
+  }
+
+  function newProblem() {
+    denom = randInt(3, 9);
+    const dims = gridDims(denom);
+    rows = dims.rows; cols = dims.cols;
+    mode = Math.random() < 0.5 ? '+' : '-';
+
+    if (mode === '+') {
+      const whole1 = randInt(1, 3);
+      const frac1 = randInt(1, denom - 1);
+      const whole2 = randInt(1, 3);
+      const frac2 = randInt(1, denom - 1);
+      target = { whole1, frac1, whole2, frac2 };
+    } else {
+      const wholeB = randInt(1, 3);
+      const fracB = randInt(1, denom - 1);
+      const wholeA = randInt(wholeB + 1, wholeB + 3);
+      const fracA = Math.random() < 0.4 ? 0 : randInt(0, denom - 1);
+      target = { wholeA, fracA, wholeB, fracB };
+    }
+
+    buildCanvas();
+    renderProblemBar();
+    buildAnswerBox();
+    clearCheckResult();
+    updateMatchBadge();
+  }
+
+  function boxCellSize() {
+    const cellW = 34;
+    const cellH = rows === 1 ? 130 : 34;
+    return { cellW, cellH };
+  }
+
+  function buildChain(container, boxCount, color, key) {
+    container.innerHTML = '';
+    const { cellW, cellH } = boxCellSize();
+    const cellEls = [];
+    for (let b = 0; b < boxCount; b++) {
+      const box = document.createElement('div');
+      box.className = 'gridBox';
+      box.style.setProperty('--c', color);
+      box.style.gridTemplateColumns = 'repeat(' + cols + ', ' + cellW + 'px)';
+      box.style.gridTemplateRows = 'repeat(' + rows + ', ' + cellH + 'px)';
+      for (let i = 0; i < denom; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'gridCell';
+        const globalIdx = b * denom + i;
+        cell.dataset.idx = globalIdx;
+        cell.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          const idx = Number(cell.dataset.idx);
+          const cur = chains[key].count;
+          if (cur === idx + 1) {
+            setChainCount(key, idx);
+          } else {
+            setChainCount(key, idx + 1);
+          }
+        });
+        box.appendChild(cell);
+        cellEls.push(cell);
+      }
+      container.appendChild(box);
+    }
+    chains[key] = { count: 0, max: boxCount * denom, color, cellEls };
+  }
+
+  function setChainCount(key, count) {
+    const chain = chains[key];
+    count = Math.max(0, Math.min(chain.max, count));
+    chain.count = count;
+    chain.cellEls.forEach((c, i) => c.classList.toggle('filled', i < count));
+    updateChainHandleValue(key);
+    updateMatchBadge();
+  }
+
+  function updateChainHandleValue(key) {
+    const handleVal = document.getElementById(key + 'Value');
+    if (!handleVal) return;
+    const chain = chains[key];
+    const whole = Math.floor(chain.count / denom);
+    const frac = chain.count % denom;
+    handleVal.innerHTML = mixedHTML(whole, frac, denom);
+  }
+
+  function buildCanvas() {
+    canvas.innerHTML = '';
+    for (const k in chains) delete chains[k];
+
+    if (mode === '+') {
+      const boxCount1 = target.whole1 + (target.frac1 > 0 ? 1 : 0);
+      const boxCount2 = target.whole2 + (target.frac2 > 0 ? 1 : 0);
+      canvas.appendChild(buildChainSection('chain1', '①', '#4CAF50', boxCount1));
+      canvas.appendChild(buildChainSection('chain2', '②', '#3B8FE0', boxCount2));
+    } else {
+      const boxCountA = target.wholeA + (target.fracA > 0 ? 1 : 0);
+      canvas.appendChild(buildChainSection('chain1', '①', '#4CAF50', boxCountA));
+    }
+  }
+
+  function buildChainSection(key, label, color, boxCount) {
+    const section = document.createElement('div');
+    section.className = 'chainSection';
+
+    const handle = document.createElement('div');
+    handle.className = 'chainHandle';
+    handle.style.background = color;
+    handle.innerHTML =
+      '<span class="clabel">' + label + '</span>' +
+      '<span class="cvalue" id="' + key + 'Value">0</span>' +
+      '<button class="miniReset" type="button" data-key="' + key + '">↺</button>';
+    handle.querySelector('.miniReset').addEventListener('click', (e) => {
+      e.stopPropagation();
+      setChainCount(key, 0);
+    });
+
+    const row = document.createElement('div');
+    row.className = 'chainRow';
+
+    section.appendChild(handle);
+    section.appendChild(row);
+
+    buildChain(row, boxCount, color, key);
+    updateChainHandleValue(key);
+    return section;
+  }
+
+  function renderProblemBar() {
+    problemBar.innerHTML = '';
+    const wrap = document.createElement('div');
+    wrap.id = 'fd-problemText';
+    wrap.className = 'fracBigWrap';
+    if (mode === '+') {
+      wrap.innerHTML =
+        '다음을 그림으로 나타내 보세요: ' +
+        mixedHTML(target.whole1, target.frac1, denom) + ' + ' + mixedHTML(target.whole2, target.frac2, denom);
+    } else {
+      wrap.innerHTML =
+        '다음을 그림으로 나타내 보세요: ' +
+        mixedHTML(target.wholeA, target.fracA, denom) + ' - ' + mixedHTML(target.wholeB, target.fracB, denom);
+    }
+    const badge = document.createElement('span');
+    badge.id = 'fd-matchBadge';
+    badge.textContent = '문제에 맞게 색칠해보세요';
+    const newBtn = document.createElement('button');
+    newBtn.id = 'fd-newProblemBtn';
+    newBtn.type = 'button';
+    newBtn.textContent = '새 문제';
+    newBtn.addEventListener('click', newProblem);
+    problemBar.appendChild(wrap);
+    problemBar.appendChild(badge);
+    problemBar.appendChild(newBtn);
+  }
+
+  function updateMatchBadge() {
+    const badge = document.getElementById('fd-matchBadge');
+    if (!badge) return;
+    let ok;
+    if (mode === '+') {
+      const want1 = target.whole1 * denom + target.frac1;
+      const want2 = target.whole2 * denom + target.frac2;
+      ok = chains.chain1 && chains.chain2 && chains.chain1.count === want1 && chains.chain2.count === want2;
+    } else {
+      const diff = (target.wholeA * denom + target.fracA) - (target.wholeB * denom + target.fracB);
+      ok = chains.chain1 && chains.chain1.count === diff;
+    }
+    if (ok) {
+      badge.textContent = mode === '+' ? '✅ 문제와 같아요!' : '✅ 뺀 만큼 지웠어요!';
+      badge.classList.add('ok');
+    } else {
+      badge.textContent = mode === '+' ? '문제에 맞게 색칠해보세요' : '뺄 만큼 터치해서 지워보세요';
+      badge.classList.remove('ok');
+    }
+  }
+
+  function computeAnswer() {
+    let totalNumer;
+    if (mode === '+') {
+      totalNumer = (target.whole1 * denom + target.frac1) + (target.whole2 * denom + target.frac2);
+    } else {
+      totalNumer = (target.wholeA * denom + target.fracA) - (target.wholeB * denom + target.fracB);
+    }
+    return { whole: Math.floor(totalNumer / denom), frac: totalNumer % denom };
+  }
+
+  function buildAnswerBox() {
+    answerBox.innerHTML = '';
+    const ans = computeAnswer();
+    const label = document.createElement('span');
+    label.textContent = '정답:';
+    answerBox.appendChild(label);
+
+    // 대분수(자연수+분수)일 때만 두 칸을 함께 보여주고,
+    // 자연수만이거나 분수만이면 해당하는 한 칸만 보여준다.
+    if (ans.whole > 0) {
+      const wholeInput = document.createElement('input');
+      wholeInput.type = 'text';
+      wholeInput.className = 'ws-input';
+      wholeInput.id = 'fd-ansWhole';
+      wholeInput.inputMode = 'numeric';
+      answerBox.appendChild(wholeInput);
+    }
+
+    if (ans.frac > 0 || ans.whole === 0) {
+      const fracWrap = document.createElement('span');
+      fracWrap.className = 'miniFrac';
+      const numInput = document.createElement('input');
+      numInput.type = 'text';
+      numInput.className = 'ws-input';
+      numInput.id = 'fd-ansNum';
+      numInput.inputMode = 'numeric';
+      numInput.style.height = '30px';
+      const bar = document.createElement('span');
+      bar.className = 'bar';
+      const denEl = document.createElement('span');
+      denEl.id = 'fd-ansDen';
+      denEl.textContent = denom;
+      fracWrap.appendChild(numInput);
+      fracWrap.appendChild(bar);
+      fracWrap.appendChild(denEl);
+      answerBox.appendChild(fracWrap);
+    }
+  }
+
+  function clearCheckResult() {
+    ['fd-ansWhole', 'fd-ansNum'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = ''; el.classList.remove('ws-correct', 'ws-wrong'); }
+    });
+    document.getElementById('fd-checkResult').textContent = '';
+    document.getElementById('fd-checkResult').className = '';
+  }
+
+  document.getElementById('fd-resetAllBtn').addEventListener('click', () => {
+    for (const k in chains) setChainCount(k, 0);
+    clearCheckResult();
+  });
+
+  document.getElementById('fd-checkBtn').addEventListener('click', () => {
+    const ans = computeAnswer();
+    let allCorrect = true;
+
+    const wholeEl = document.getElementById('fd-ansWhole');
+    if (wholeEl) {
+      const wholeRaw = wholeEl.value.trim();
+      const wholeOk = wholeRaw !== '' && parseInt(wholeRaw, 10) === ans.whole;
+      wholeEl.classList.toggle('ws-correct', wholeOk);
+      wholeEl.classList.toggle('ws-wrong', !wholeOk);
+      if (!wholeOk) allCorrect = false;
+    }
+
+    const numEl = document.getElementById('fd-ansNum');
+    if (numEl) {
+      const numRaw = numEl.value.trim();
+      const numOk = numRaw !== '' && parseInt(numRaw, 10) === ans.frac;
+      numEl.classList.toggle('ws-correct', numOk);
+      numEl.classList.toggle('ws-wrong', !numOk);
+      if (!numOk) allCorrect = false;
+    }
+
+    const resultEl = document.getElementById('fd-checkResult');
+    resultEl.textContent = allCorrect ? '정답입니다! 🎉' : '다시 한 번 확인해보세요.';
+    resultEl.className = allCorrect ? 'ok' : 'no';
+  });
+
+  newProblem();
 })();
 
 </script>
