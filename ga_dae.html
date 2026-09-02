@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>가분수를 대분수로 바꾸기</title>
+<style>
+  @font-face {
+    font-family: 'DungGeunMo';
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/neo/DungGeunMo.woff2') format('woff2');
+    font-display: swap;
+  }
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100%;
+    font-family: 'Pretendard', sans-serif;
+    background: #f1eef8;
+  }
+  #app { display: flex; flex-direction: column; min-height: 100%; }
+
+  header {
+    padding: 14px 22px;
+    background: #3a3a3a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 5px solid #000;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  header h1 {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+  header .sub {
+    font-size: 13px;
+    color: #cfcfcf;
+    margin-top: 4px;
+  }
+  #resetAllBtn {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 15px;
+    background: #ff5c5c;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.35);
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #resetAllBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.35); transform: translate(3px,3px); }
+
+  #modeBar {
+    display: flex;
+    gap: 10px;
+    padding: 14px 22px 0;
+    flex-shrink: 0;
+  }
+  .modeBtn {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 14px;
+    padding: 9px 16px;
+    border: 3px solid #000;
+    border-radius: 6px 6px 0 0;
+    background: #ddd;
+    color: #555;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+  }
+  .modeBtn.active {
+    background: #8E5AE8;
+    color: #fff;
+  }
+
+  #problemBar {
+    margin: 0 22px;
+    padding: 16px 20px;
+    background: #fff;
+    border: 3px solid #000;
+    border-radius: 0 8px 8px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+  }
+  .fracBig {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 22px;
+    line-height: 1.1;
+    color: #222;
+    margin: 0 8px;
+  }
+  .fracBig .num { padding: 0 4px; }
+  .fracBig .bar { width: 100%; border-top: 3px solid #222; margin: 2px 0; }
+  .fracBig .den { padding: 0 4px; }
+  #problemText {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #333;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  #newProblemBtn {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 13px;
+    background: #4C9BE8;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #newProblemBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.3); transform: translate(2px,2px); }
+  #matchBadge {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 12px;
+    background: #eee;
+    color: #888;
+  }
+  #matchBadge.ok { background: #eafbee; color: #2ba84a; }
+
+  .denomStepper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  .stepBtn {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #333;
+    background: #fff;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .stepBtn:active { background: #eee; }
+  #denomVal { font-weight: 700; min-width: 20px; text-align: center; }
+
+  .fracInline {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    line-height: 1.05;
+    margin: 0 3px;
+    vertical-align: middle;
+  }
+  .fracInline .fnum, .fracInline .fden { padding: 0 3px; }
+  .fracInline .fbar { width: 100%; border-top: 2px solid #222; margin: 1px 0; }
+
+  #liveReadout {
+    margin: 14px 22px 0;
+    font-size: 15px;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  #liveReadout b { color: #8E5AE8; font-size: 18px; }
+  #liveReadout .fracInline { font-size: 17px; color: #8E5AE8; }
+
+  #canvas {
+    margin: 12px 22px 0;
+    padding: 18px;
+    min-height: 260px;
+    background: #ffffff;
+    border: 3px solid #000;
+    border-radius: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 14px;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+  }
+
+  .square {
+    display: flex;
+    flex-direction: column;
+  }
+  .square .cols {
+    display: flex;
+    height: 130px;
+    border: 3px solid #8E5AE8;
+    border-radius: 3px;
+  }
+  .square.done .cols { border-color: #2ba84a; }
+  .col {
+    width: 30px;
+    border-right: 1px dashed rgba(0,0,0,0.28);
+    background: transparent;
+    cursor: pointer;
+  }
+  .col:last-child { border-right: none; }
+  .col.filled {
+    background: #8E5AE8;
+    opacity: 0.82;
+  }
+  .square.done .col.filled { background: #2ba84a; }
+  .square .tag {
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+    margin-top: 4px;
+    font-family: 'Pretendard', sans-serif;
+  }
+
+  #worksheet {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 20px;
+  }
+  .ws-box {
+    width: 620px;
+    max-width: 100%;
+    background: #fff;
+    border: 3px solid #222;
+    border-radius: 6px;
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+  .ws-header {
+    display: flex;
+    border-bottom: 3px solid #222;
+  }
+  .ws-header > div {
+    flex: 1;
+    text-align: center;
+    padding: 10px 6px;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 13px;
+    color: #333;
+    background: #f1eef8;
+  }
+  .ws-header > div:first-child { border-right: 3px solid #222; }
+  .ws-body { display: flex; }
+  .ws-left {
+    flex: 1.3;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border-right: 3px solid #222;
+  }
+  .ws-right {
+    flex: 1;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+  }
+  .ws-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 15px;
+    color: #222;
+    flex-wrap: wrap;
+  }
+  .ws-input {
+    width: 34px;
+    height: 30px;
+    text-align: center;
+    font-size: 15px;
+    border: 2px solid #999;
+    border-radius: 4px;
+    font-family: 'Pretendard', sans-serif;
+  }
+  .ws-input.ws-correct { border-color: #2ba84a; background: #eafbee; }
+  .ws-input.ws-wrong { border-color: #e04b4b; background: #fdecec; }
+
+  .ws-finalRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    border-top: 3px solid #222;
+    font-size: 16px;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+  }
+  .miniFrac {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 13px;
+  }
+  .miniFrac .bar { width: 100%; border-top: 2px solid #222; margin: 1px 0; }
+
+  #checkBtn {
+    margin-top: 18px;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 15px;
+    background: #4C9BE8;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #checkBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.3); transform: translate(3px,3px); }
+  #checkResult {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    min-height: 20px;
+  }
+  #checkResult.ok { color: #2ba84a; }
+  #checkResult.no { color: #e04b4b; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div>
+      <h1>가분수를 대분수로 바꾸기</h1>
+      <div class="sub">칸을 터치해서 1/분모 조각을 색칠해보세요 · 다 채우면 새 사각형이 자동으로 생겨요</div>
+    </div>
+    <button id="resetAllBtn" type="button">전체 초기화</button>
+  </header>
+
+  <div id="modeBar">
+    <button class="modeBtn" id="modeProblemBtn" type="button">문제풀이형</button>
+    <button class="modeBtn" id="modeFreeBtn" type="button">자유 탐구형</button>
+  </div>
+
+  <div id="problemBar"></div>
+
+  <div id="liveReadout">지금 색칠한 낱개: <b id="liveTotal">0</b>개 = <span id="liveFrac"></span></div>
+
+  <div id="canvas"></div>
+
+  <div id="worksheet">
+    <div class="ws-box">
+      <div class="ws-header">
+        <div>단위분수 개수로 구하기</div>
+        <div>나눗셈으로 구하기</div>
+      </div>
+      <div class="ws-body">
+        <div class="ws-left">
+          <div class="ws-row">
+            <span id="ws-frac1"></span>
+            <span>⇒</span>
+            <span id="ws-unitfrac1"></span>
+            <span>이</span>
+            <input type="text" class="ws-input" id="ws-u1" inputmode="numeric">
+            <span>개</span>
+          </div>
+          <div class="ws-row">
+            <span id="ws-fracWhole"></span>
+            <span>(1)이</span>
+            <input type="text" class="ws-input" id="ws-whole-a" inputmode="numeric">
+            <span>개 +</span>
+            <span id="ws-unitfrac2"></span>
+            <span>이</span>
+            <input type="text" class="ws-input" id="ws-rem-a" inputmode="numeric">
+            <span>개</span>
+          </div>
+        </div>
+        <div class="ws-right">
+          <div class="ws-row">
+            <span id="ws-num2">0</span> ÷ <span id="ws-den3">2</span> =
+            <input type="text" class="ws-input" id="ws-quot" inputmode="numeric">
+            <span>...</span>
+            <input type="text" class="ws-input" id="ws-remb" inputmode="numeric">
+          </div>
+        </div>
+      </div>
+      <div class="ws-finalRow">
+        <span>대분수:</span>
+        <input type="text" class="ws-input" id="ws-final-whole" inputmode="numeric">
+        <span class="miniFrac">
+          <input type="text" class="ws-input" id="ws-final-rem" inputmode="numeric" style="height:26px;">
+          <span class="bar"></span>
+          <span id="ws-den4">2</span>
+        </span>
+      </div>
+    </div>
+    <button id="checkBtn" type="button">정답 확인</button>
+    <div id="checkResult"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const COL_WIDTH = 30;
+  const MAX_SQUARES = 8;
+
+  const canvas = document.getElementById('canvas');
+  const problemBar = document.getElementById('problemBar');
+
+  let mode = 'problem'; // 'problem' | 'free'
+  let denom = 5;
+  let total = 0;
+  let target = { whole: 1, rem: 2, denom: 5, numerator: 7 };
+
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function fracHTML(num, den) {
+    return '<span class="fracInline"><span class="fnum">' + num + '</span><span class="fbar"></span><span class="fden">' + den + '</span></span>';
+  }
+
+  function newProblem() {
+    const d = randInt(2, 9);
+    const w = randInt(1, 3);
+    const r = randInt(1, d - 1);
+    target = { whole: w, rem: r, denom: d, numerator: w * d + r };
+    denom = d;
+    total = 0;
+    render();
+  }
+
+  function setDenomFree(d) {
+    denom = Math.max(2, Math.min(9, d));
+    total = 0;
+    render();
+  }
+
+  function setMode(m) {
+    mode = m;
+    document.getElementById('modeProblemBtn').classList.toggle('active', m === 'problem');
+    document.getElementById('modeFreeBtn').classList.toggle('active', m === 'free');
+    if (m === 'problem') {
+      newProblem();
+    } else {
+      denom = 5;
+      total = 0;
+      render();
+    }
+  }
+
+  function renderProblemBar() {
+    problemBar.innerHTML = '';
+    if (mode === 'problem') {
+      const wrap = document.createElement('div');
+      wrap.id = 'problemText';
+      wrap.innerHTML =
+        '이 가분수를 만들어 보세요:' +
+        '<span class="fracBig"><span class="num">' + target.numerator + '</span><span class="bar"></span><span class="den">' + target.denom + '</span></span>';
+      const newBtn = document.createElement('button');
+      newBtn.id = 'newProblemBtn';
+      newBtn.type = 'button';
+      newBtn.textContent = '새 문제';
+      newBtn.addEventListener('click', newProblem);
+      const badge = document.createElement('span');
+      badge.id = 'matchBadge';
+      badge.textContent = '목표만큼 색칠해보세요';
+      problemBar.appendChild(wrap);
+      problemBar.appendChild(badge);
+      problemBar.appendChild(newBtn);
+    } else {
+      const stepper = document.createElement('div');
+      stepper.className = 'denomStepper';
+      stepper.innerHTML =
+        '<span>분모</span>' +
+        '<button class="stepBtn" id="denomMinus" type="button">−</button>' +
+        '<span id="denomVal">' + denom + '</span>' +
+        '<button class="stepBtn" id="denomPlus" type="button">+</button>' +
+        '<span style="margin-left:14px;color:#666;">칸을 터치해서 자유롭게 가분수를 만들어보세요</span>';
+      problemBar.appendChild(stepper);
+      document.getElementById('denomMinus').addEventListener('click', () => setDenomFree(denom - 1));
+      document.getElementById('denomPlus').addEventListener('click', () => setDenomFree(denom + 1));
+    }
+  }
+
+  function updateMatchBadge() {
+    if (mode !== 'problem') return;
+    const badge = document.getElementById('matchBadge');
+    if (!badge) return;
+    if (total === target.numerator) {
+      badge.textContent = '✅ 목표와 같아요!';
+      badge.classList.add('ok');
+    } else {
+      badge.textContent = '목표만큼 색칠해보세요';
+      badge.classList.remove('ok');
+    }
+  }
+
+  function setTotal(v) {
+    total = Math.max(0, Math.min(denom * MAX_SQUARES, v));
+    renderSquares();
+    updateLiveReadout();
+    updateMatchBadge();
+    refreshWorksheet();
+  }
+
+  function updateLiveReadout() {
+    document.getElementById('liveTotal').textContent = total;
+    document.getElementById('liveFrac').innerHTML = fracHTML(total, denom);
+  }
+
+  function renderSquares() {
+    canvas.innerHTML = '';
+    const fullSquares = Math.floor(total / denom);
+    const remainder = total % denom;
+    let squareCount = fullSquares + (remainder > 0 ? 1 : 0) + 1;
+    squareCount = Math.max(1, Math.min(MAX_SQUARES, squareCount));
+
+    for (let s = 0; s < squareCount; s++) {
+      const filledHere = s < fullSquares ? denom : (s === fullSquares ? remainder : 0);
+      const sqEl = document.createElement('div');
+      sqEl.className = 'square' + (filledHere === denom ? ' done' : '');
+
+      const colsEl = document.createElement('div');
+      colsEl.className = 'cols';
+      colsEl.style.width = (denom * COL_WIDTH) + 'px';
+
+      for (let c = 0; c < denom; c++) {
+        const colEl = document.createElement('div');
+        colEl.className = 'col' + (c < filledHere ? ' filled' : '');
+        colEl.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          const pos = s * denom + c + 1;
+          if (pos === total) {
+            setTotal(pos - 1);
+          } else {
+            setTotal(pos);
+          }
+        });
+        colsEl.appendChild(colEl);
+      }
+
+      const tag = document.createElement('div');
+      tag.className = 'tag';
+      tag.textContent = (filledHere === denom ? '1묶음 완성' : (s + 1) + '번째');
+
+      sqEl.appendChild(colsEl);
+      sqEl.appendChild(tag);
+      canvas.appendChild(sqEl);
+    }
+  }
+
+  function refreshWorksheet() {
+    document.getElementById('ws-frac1').innerHTML = fracHTML(total, denom);
+    document.getElementById('ws-unitfrac1').innerHTML = fracHTML(1, denom);
+    document.getElementById('ws-fracWhole').innerHTML = fracHTML(denom, denom);
+    document.getElementById('ws-unitfrac2').innerHTML = fracHTML(1, denom);
+    document.getElementById('ws-num2').textContent = total;
+    document.getElementById('ws-den3').textContent = denom;
+    document.getElementById('ws-den4').textContent = denom;
+  }
+
+  function clearWorksheetInputs() {
+    ['ws-u1','ws-whole-a','ws-rem-a','ws-quot','ws-remb','ws-final-whole','ws-final-rem'].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('ws-correct','ws-wrong');
+    });
+    document.getElementById('checkResult').textContent = '';
+    document.getElementById('checkResult').className = '';
+  }
+
+  function render() {
+    renderProblemBar();
+    renderSquares();
+    updateLiveReadout();
+    updateMatchBadge();
+    refreshWorksheet();
+    clearWorksheetInputs();
+  }
+
+  document.getElementById('modeProblemBtn').addEventListener('click', () => setMode('problem'));
+  document.getElementById('modeFreeBtn').addEventListener('click', () => setMode('free'));
+
+  document.getElementById('resetAllBtn').addEventListener('click', () => {
+    total = 0;
+    if (mode === 'problem') { newProblem(); } else { render(); }
+  });
+
+  document.getElementById('checkBtn').addEventListener('click', () => {
+    const whole = Math.floor(total / denom);
+    const rem = total % denom;
+    const checks = [
+      { id: 'ws-u1', expected: total },
+      { id: 'ws-whole-a', expected: whole },
+      { id: 'ws-rem-a', expected: rem },
+      { id: 'ws-quot', expected: whole },
+      { id: 'ws-remb', expected: rem },
+      { id: 'ws-final-whole', expected: whole },
+      { id: 'ws-final-rem', expected: rem }
+    ];
+    let allCorrect = true;
+    checks.forEach(chk => {
+      const el = document.getElementById(chk.id);
+      const raw = el.value.trim();
+      const ok = raw !== '' && parseInt(raw, 10) === chk.expected;
+      el.classList.toggle('ws-correct', ok);
+      el.classList.toggle('ws-wrong', !ok);
+      if (!ok) allCorrect = false;
+    });
+    const resultEl = document.getElementById('checkResult');
+    resultEl.textContent = allCorrect ? '정답입니다! 🎉' : '다시 한 번 확인해보세요.';
+    resultEl.className = allCorrect ? 'ok' : 'no';
+  });
+
+  setMode('problem');
+})();
+</script>
+</body>
+</html>

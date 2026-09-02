@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소수의 덧셈 조작활동</title>
+<style>
+  @font-face {
+    font-family: 'DungGeunMo';
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/neo/DungGeunMo.woff2') format('woff2');
+    font-display: swap;
+  }
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+  html, body {
+    margin: 0; padding: 0; min-height: 100%;
+    font-family: 'Pretendard', sans-serif;
+    background: #eef3ea;
+  }
+  #app { display: flex; flex-direction: column; min-height: 100%; }
+
+  header {
+    padding: 14px 22px;
+    background: #3a3a3a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 5px solid #000;
+    flex-shrink: 0;
+  }
+  header h1 {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+  header .sub {
+    font-size: 13px;
+    color: #cfcfcf;
+    margin-top: 4px;
+  }
+  #resetAllBtn {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 15px;
+    background: #ff5c5c;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.35);
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #resetAllBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.35); transform: translate(3px,3px); }
+
+  #canvas {
+    position: relative;
+    height: 480px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+
+  #worksheet {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 40px;
+    background: #eef3ea;
+  }
+  .ws-box {
+    width: 560px;
+    max-width: 100%;
+    background: #fff;
+    border: 3px solid #222;
+    border-radius: 6px;
+    box-shadow: 5px 5px 0 rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+  .ws-header {
+    display: flex;
+    border-bottom: 3px solid #222;
+  }
+  .ws-header > div {
+    flex: 1;
+    text-align: center;
+    padding: 10px 6px;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 14px;
+    color: #333;
+    background: #f4f1e6;
+  }
+  .ws-header > div:first-child { border-right: 3px solid #222; }
+  .ws-body { display: flex; }
+  .ws-left {
+    flex: 1.5;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .ws-divider { width: 3px; background: #222; }
+  .ws-right {
+    flex: 1;
+    padding: 18px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .ws-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+    color: #222;
+    flex-wrap: wrap;
+  }
+  .ws-num { font-weight: 700; min-width: 34px; display: inline-block; }
+  .ws-arrow { color: #888; margin: 0 2px; }
+  .ws-plus { margin-right: 2px; }
+  .ws-input {
+    width: 36px;
+    height: 30px;
+    text-align: center;
+    font-size: 16px;
+    border: 2px solid #999;
+    border-radius: 4px;
+    font-family: 'Pretendard', sans-serif;
+  }
+  .ws-input-wide { width: 52px; }
+  .ws-input.ws-correct { border-color: #2ba84a; background: #eafbee; }
+  .ws-input.ws-wrong { border-color: #e04b4b; background: #fdecec; }
+  .ws-right-num { font-size: 17px; font-weight: 700; }
+  .ws-right-line { width: 70px; border-top: 2px solid #222; margin: 2px 0; }
+
+  #checkBtn {
+    margin-top: 18px;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 15px;
+    background: #4C9BE8;
+    color: #fff;
+    border: 3px solid #000;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #checkBtn:active { box-shadow: 1px 1px 0 rgba(0,0,0,0.3); transform: translate(3px,3px); }
+  #checkResult {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    min-height: 20px;
+  }
+  #checkResult.ok { color: #2ba84a; }
+  #checkResult.no { color: #e04b4b; }
+
+  .square {
+    position: absolute;
+    width: 300px;
+    border: 3px solid var(--c);
+    border-radius: 4px;
+    background: transparent;
+    touch-action: none;
+  }
+  .handle {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    background: var(--c);
+    color: #fff;
+    text-align: center;
+    padding: 8px 6px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    cursor: grab;
+    border-bottom: 3px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+  }
+  .handle .label { font-size: 13px; opacity: 0.9; }
+  .handle .value { font-size: 20px; }
+  .handle:active { cursor: grabbing; }
+
+  .columns {
+    display: flex;
+    height: 220px;
+    background: rgba(255,255,255,0.15);
+  }
+  .col {
+    flex: 1;
+    border-right: 1px dashed rgba(0,0,0,0.28);
+    background: transparent;
+    cursor: pointer;
+  }
+  .col:last-child { border-right: none; }
+  .col.filled {
+    background: var(--c);
+    opacity: 0.78;
+    mix-blend-mode: multiply;
+  }
+
+  .miniReset {
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 11px;
+    background: rgba(255,255,255,0.85);
+    color: #333;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div>
+      <h1>소수의 덧셈 조작활동</h1>
+      <div class="sub">칸을 터치해서 색칠 · 손잡이(위쪽 막대)를 잡고 이동 · 서로 겹쳐서 비교해보세요</div>
+    </div>
+    <button id="resetAllBtn">전체 초기화</button>
+  </header>
+
+  <div id="canvas"></div>
+
+  <div id="worksheet">
+    <div class="ws-box">
+      <div class="ws-header">
+        <div>최소단위 개수로 구하기</div>
+        <div>각 자릿값</div>
+      </div>
+      <div class="ws-body">
+        <div class="ws-left">
+          <div class="ws-row">
+            <span class="ws-num" id="ws-addend1">0.0</span>
+            <span class="ws-arrow">⇒</span>
+            <span>0.1이</span>
+            <input type="text" class="ws-input" id="ws-unit1" inputmode="numeric">
+            <span>개</span>
+          </div>
+          <div class="ws-row">
+            <span class="ws-plus">+</span>
+            <span class="ws-num" id="ws-addend2">0.0</span>
+            <span class="ws-arrow">⇒</span>
+            <span>0.1이</span>
+            <input type="text" class="ws-input" id="ws-unit2" inputmode="numeric">
+            <span>개</span>
+          </div>
+          <div class="ws-row">
+            <input type="text" class="ws-input ws-input-wide" id="ws-sumval" inputmode="decimal">
+            <span class="ws-arrow">⇐</span>
+            <span>0.1이</span>
+            <input type="text" class="ws-input" id="ws-totalunit" inputmode="numeric">
+            <span>개</span>
+          </div>
+        </div>
+        <div class="ws-divider"></div>
+        <div class="ws-right">
+          <div class="ws-right-num" id="ws-r-addend1">0.0</div>
+          <div class="ws-right-num"><span class="ws-plus">+</span><span id="ws-r-addend2">0.0</span></div>
+          <div class="ws-right-line"></div>
+          <input type="text" class="ws-input ws-input-wide" id="ws-r-sum" inputmode="decimal">
+        </div>
+      </div>
+    </div>
+    <button id="checkBtn" type="button">정답 확인</button>
+    <div id="checkResult"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const canvas = document.getElementById('canvas');
+  const COL_WIDTH = 30; // px, must match column count math (300px / 10)
+  let topZ = 10;
+
+  const squares = [
+    { id: 'sq1', color: '#4CAF50', name: '①', left: 30,  top: 30 },
+    { id: 'sq2', color: '#3B8FE0', name: '②', left: 360, top: 30 }
+  ];
+
+  squares.forEach(cfg => {
+    const sq = document.createElement('div');
+    sq.className = 'square';
+    sq.id = cfg.id;
+    sq.style.setProperty('--c', cfg.color);
+    sq.style.left = cfg.left + 'px';
+    sq.style.top = cfg.top + 'px';
+    sq.style.zIndex = topZ++;
+    sq.dataset.count = 0;
+
+    const handle = document.createElement('div');
+    handle.className = 'handle';
+    handle.innerHTML =
+      '<span class="label">' + cfg.name + '</span>' +
+      '<span class="value">0.0</span>' +
+      '<button class="miniReset" type="button">↺</button>';
+
+    const cols = document.createElement('div');
+    cols.className = 'columns';
+    for (let i = 0; i < 10; i++) {
+      const col = document.createElement('div');
+      col.className = 'col';
+      col.dataset.idx = i;
+      cols.appendChild(col);
+    }
+
+    sq.appendChild(handle);
+    sq.appendChild(cols);
+    canvas.appendChild(sq);
+
+    function setFill(count) {
+      count = Math.max(0, Math.min(10, count));
+      sq.dataset.count = count;
+      cols.querySelectorAll('.col').forEach((c, i) => {
+        c.classList.toggle('filled', i < count);
+      });
+      const valText = count === 10 ? '1.0' : ('0.' + count);
+      handle.querySelector('.value').textContent = valText;
+      if (typeof refreshWorksheet === 'function') refreshWorksheet();
+    }
+
+    cols.querySelectorAll('.col').forEach(col => {
+      col.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        const idx = Number(col.dataset.idx);
+        const cur = Number(sq.dataset.count);
+        // 이미 그 칸까지 채워진 상태에서 같은 칸을 다시 누르면 한 칸 줄어듦(토글 느낌)
+        if (cur === idx + 1) {
+          setFill(idx);
+        } else {
+          setFill(idx + 1);
+        }
+      });
+    });
+
+    handle.querySelector('.miniReset').addEventListener('click', (e) => {
+      e.stopPropagation();
+      setFill(0);
+    });
+
+    // 드래그 (손잡이만)
+    handle.addEventListener('pointerdown', (e) => {
+      if (e.target.classList.contains('miniReset')) return;
+      sq.style.zIndex = ++topZ;
+      const canvasRect = canvas.getBoundingClientRect();
+      const rect = sq.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      handle.setPointerCapture(e.pointerId);
+
+      function onMove(ev) {
+        let x = ev.clientX - canvasRect.left - offsetX;
+        let y = ev.clientY - canvasRect.top - offsetY;
+        x = Math.max(0, Math.min(canvas.clientWidth - sq.offsetWidth, x));
+        y = Math.max(0, Math.min(canvas.clientHeight - sq.offsetHeight, y));
+        sq.style.left = x + 'px';
+        sq.style.top = y + 'px';
+      }
+      function onUp(ev) {
+        handle.removeEventListener('pointermove', onMove);
+        handle.removeEventListener('pointerup', onUp);
+        // x축 0.1칸 눈금에 스냅
+        let x = parseFloat(sq.style.left);
+        const snapped = Math.round(x / COL_WIDTH) * COL_WIDTH;
+        sq.style.left = Math.max(0, Math.min(canvas.clientWidth - sq.offsetWidth, snapped)) + 'px';
+      }
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onUp);
+    });
+
+    sq._reset = () => {
+      setFill(0);
+      sq.style.left = cfg.left + 'px';
+      sq.style.top = cfg.top + 'px';
+    };
+  });
+
+  document.getElementById('resetAllBtn').addEventListener('click', () => {
+    document.querySelectorAll('.square').forEach(sq => sq._reset && sq._reset());
+    ['ws-unit1','ws-unit2','ws-sumval','ws-totalunit','ws-r-sum'].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('ws-correct','ws-wrong');
+    });
+    document.getElementById('checkResult').textContent = '';
+    document.getElementById('checkResult').className = '';
+  });
+
+  function formatDecimal(count) {
+    const whole = Math.floor(count / 10);
+    const frac = count % 10;
+    return whole + '.' + frac;
+  }
+
+  function refreshWorksheet() {
+    const sq1 = document.getElementById('sq1');
+    const sq2 = document.getElementById('sq2');
+    if (!sq1 || !sq2) return;
+    const c1 = Number(sq1.dataset.count || 0);
+    const c2 = Number(sq2.dataset.count || 0);
+    const t1 = formatDecimal(c1);
+    const t2 = formatDecimal(c2);
+    document.getElementById('ws-addend1').textContent = t1;
+    document.getElementById('ws-addend2').textContent = t2;
+    document.getElementById('ws-r-addend1').textContent = t1;
+    document.getElementById('ws-r-addend2').textContent = t2;
+  }
+
+  function normalizeDecimalInput(raw) {
+    if (raw === '' || raw == null) return null;
+    const num = parseFloat(String(raw).replace(',', '.'));
+    if (isNaN(num)) return null;
+    const rounded = Math.round(num * 10) / 10;
+    const whole = Math.floor(rounded);
+    const frac = Math.round((rounded - whole) * 10);
+    return whole + '.' + frac;
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', () => {
+    const sq1 = document.getElementById('sq1');
+    const sq2 = document.getElementById('sq2');
+    const c1 = Number(sq1.dataset.count || 0);
+    const c2 = Number(sq2.dataset.count || 0);
+    const total = c1 + c2;
+    const sumStr = formatDecimal(total);
+
+    const checks = [
+      { id: 'ws-unit1', expected: String(c1), type: 'int' },
+      { id: 'ws-unit2', expected: String(c2), type: 'int' },
+      { id: 'ws-sumval', expected: sumStr, type: 'decimal' },
+      { id: 'ws-totalunit', expected: String(total), type: 'int' },
+      { id: 'ws-r-sum', expected: sumStr, type: 'decimal' }
+    ];
+
+    let allCorrect = true;
+    checks.forEach(chk => {
+      const el = document.getElementById(chk.id);
+      const raw = el.value.trim();
+      let ok;
+      if (chk.type === 'decimal') {
+        ok = normalizeDecimalInput(raw) === chk.expected;
+      } else {
+        ok = raw !== '' && parseInt(raw, 10) === parseInt(chk.expected, 10);
+      }
+      el.classList.toggle('ws-correct', ok);
+      el.classList.toggle('ws-wrong', !ok);
+      if (!ok) allCorrect = false;
+    });
+
+    const resultEl = document.getElementById('checkResult');
+    resultEl.textContent = allCorrect ? '정답입니다! 🎉' : '다시 한 번 확인해보세요.';
+    resultEl.className = allCorrect ? 'ok' : 'no';
+  });
+
+  refreshWorksheet();
+})();
+</script>
+</body>
+</html>
