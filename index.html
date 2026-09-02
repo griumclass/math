@@ -1170,17 +1170,22 @@ html, body {
   }
 #page-bunsuds #fd-matchBadge.ok { background: #eafbee; color: #2ba84a; }
 #page-bunsuds #fd-canvas {
+    position: relative;
     margin: 14px 22px 0;
-    padding: 20px;
+    height: 420px;
     background: #ffffff;
     border: 3px solid #000;
     border-radius: 8px;
     box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+    overflow: hidden;
+  }
+#page-bunsuds .chainSection {
+    position: absolute;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 8px;
+    touch-action: none;
   }
-#page-bunsuds .chainSection { display: flex; flex-direction: column; gap: 8px; }
 #page-bunsuds .chainHandle {
     align-self: flex-start;
     font-family: 'DungGeunMo', 'Pretendard', sans-serif;
@@ -1194,7 +1199,9 @@ html, body {
     align-items: center;
     gap: 8px;
     box-shadow: 3px 3px 0 rgba(0,0,0,0.3);
+    cursor: grab;
   }
+#page-bunsuds .chainHandle:active { cursor: grabbing; }
 #page-bunsuds .chainHandle .cvalue { font-size: 15px; }
 #page-bunsuds .chainHandle .miniReset {
     font-family: 'DungGeunMo', 'Pretendard', sans-serif;
@@ -1206,7 +1213,7 @@ html, body {
     border-radius: 3px;
     cursor: pointer;
   }
-#page-bunsuds .chainRow { display: flex; flex-wrap: wrap; gap: 6px; align-items: flex-end; }
+#page-bunsuds .chainRow { display: flex; flex-wrap: nowrap; gap: 6px; align-items: flex-end; }
 #page-bunsuds .gridBox {
     display: grid;
     border: 3px solid var(--c);
@@ -1223,6 +1230,7 @@ html, body {
     background: var(--c);
     opacity: 0.78;
   }
+#page-bunsuds .gridCell.inactive { cursor: default; }
 #page-bunsuds #fd-worksheet {
     flex-shrink: 0;
     display: flex;
@@ -1530,7 +1538,7 @@ html, body {
   <header>
     <div>
       <h1>분수의 덧셈과 뺄셈</h1>
-      <div class="sub">칸을 터치해서 색칠 · 다시 터치하면 빠짐 · 대분수의 덧셈과 뺄셈을 그림으로 익혀요</div>
+      <div class="sub">칸을 터치해서 색칠 · 다시 터치하면 빠짐 · 손잡이를 잡고 옮겨서 서로 겹쳐 비교해보세요</div>
     </div>
     <button id="fd-resetAllBtn" type="button">전체 초기화</button>
   </header>
@@ -2498,6 +2506,7 @@ html, body {
   let mode = '+';
   let denom = 6;
   let rows = 2, cols = 3;
+  let topZ = 10;
   let target = {}; // add: {whole1,frac1,whole2,frac2} / sub: {wholeA,fracA,wholeB,fracB}
   const chains = {}; // key -> { count, max, color, cellEls: [] }
 
@@ -2539,7 +2548,7 @@ html, body {
       const wholeB = randInt(1, 3);
       const fracB = randInt(1, denom - 1);
       const wholeA = randInt(wholeB + 1, wholeB + 3);
-      const fracA = Math.random() < 0.4 ? 0 : randInt(0, denom - 1);
+      const fracA = Math.random() < 0.35 ? 0 : randInt(1, denom - 1);
       target = { wholeA, fracA, wholeB, fracB };
     }
 
@@ -2586,7 +2595,7 @@ html, body {
       }
       container.appendChild(box);
     }
-    chains[key] = { count: 0, max: boxCount * denom, color, cellEls };
+    chains[key] = { mode: 'add', count: 0, max: boxCount * denom, color, cellEls };
   }
 
   function setChainCount(key, count) {
@@ -2598,13 +2607,108 @@ html, body {
     updateMatchBadge();
   }
 
-  function updateChainHandleValue(key) {
-    const handleVal = document.getElementById(key + 'Value');
-    if (!handleVal) return;
+  // 뺄셈 전용: 처음부터 (자연수 상자는 통째로, 마지막 분수 상자는 fracCount칸만큼) 색칠된 상태로 시작해서
+  // 자연수 상자는 한 상자를 통째로 터치해 없애고, 마지막 분수 상자는 칸 단위로 지워서 뺄셈을 표현한다.
+  function buildSubtractionChain(container, wholeCount, fracCount, color, key) {
+    container.innerHTML = '';
+    const { cellW, cellH } = boxCellSize();
+    const boxCount = wholeCount + (fracCount > 0 ? 1 : 0);
+    const wholeBoxCellGroups = [];
+    const fracCellEls = [];
+
+    for (let b = 0; b < boxCount; b++) {
+      const box = document.createElement('div');
+      box.className = 'gridBox';
+      box.style.setProperty('--c', color);
+      box.style.gridTemplateColumns = 'repeat(' + cols + ', ' + cellW + 'px)';
+      box.style.gridTemplateRows = 'repeat(' + rows + ', ' + cellH + 'px)';
+      const isWholeBox = b < wholeCount;
+      const activeCells = isWholeBox ? denom : fracCount;
+      const cellsInThisBox = [];
+
+      for (let i = 0; i < denom; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'gridCell';
+        if (i < activeCells) {
+          cell.classList.add('filled');
+          if (isWholeBox) {
+            cell.addEventListener('pointerdown', (e) => {
+              e.stopPropagation();
+              toggleWholeBox(key, b);
+            });
+            cellsInThisBox.push(cell);
+          } else {
+            const fi = i;
+            cell.addEventListener('pointerdown', (e) => {
+              e.stopPropagation();
+              const cur = chains[key].fracCount;
+              if (cur === fi + 1) setFracBoxCount(key, fi);
+              else setFracBoxCount(key, fi + 1);
+            });
+            fracCellEls.push(cell);
+          }
+        } else {
+          cell.classList.add('inactive');
+        }
+        box.appendChild(cell);
+      }
+      if (isWholeBox) wholeBoxCellGroups.push(cellsInThisBox);
+      container.appendChild(box);
+    }
+
+    chains[key] = {
+      mode: 'sub',
+      count: wholeCount * denom + fracCount,
+      color, denom, wholeCount,
+      wholeBoxStates: Array(wholeCount).fill(true),
+      fracCount, fracMax: fracCount,
+      wholeBoxCellGroups, fracCellEls
+    };
+  }
+
+  function toggleWholeBox(key, boxIndex) {
     const chain = chains[key];
+    chain.wholeBoxStates[boxIndex] = !chain.wholeBoxStates[boxIndex];
+    chain.wholeBoxCellGroups[boxIndex].forEach(c => c.classList.toggle('filled', chain.wholeBoxStates[boxIndex]));
+    recomputeSubCount(key);
+  }
+
+  function setFracBoxCount(key, count) {
+    const chain = chains[key];
+    count = Math.max(0, Math.min(chain.fracMax, count));
+    chain.fracCount = count;
+    chain.fracCellEls.forEach((c, i) => c.classList.toggle('filled', i < count));
+    recomputeSubCount(key);
+  }
+
+  function recomputeSubCount(key) {
+    const chain = chains[key];
+    const onCount = chain.wholeBoxStates.filter(Boolean).length;
+    chain.count = onCount * chain.denom + chain.fracCount;
+    updateChainHandleValue(key);
+    updateMatchBadge();
+  }
+
+  function resetChainValue(key) {
+    const chain = chains[key];
+    if (!chain) return;
+    if (chain.mode === 'sub') {
+      chain.wholeBoxStates.fill(true);
+      chain.wholeBoxCellGroups.forEach(group => group.forEach(c => c.classList.add('filled')));
+      chain.fracCount = chain.fracMax;
+      chain.fracCellEls.forEach(c => c.classList.add('filled'));
+      recomputeSubCount(key);
+    } else {
+      setChainCount(key, 0);
+    }
+  }
+
+  function updateChainHandleValue(key) {
+    const chain = chains[key];
+    if (!chain || !chain.handleEl) return;
     const whole = Math.floor(chain.count / denom);
     const frac = chain.count % denom;
-    handleVal.innerHTML = mixedHTML(whole, frac, denom);
+    chain.handleEl.innerHTML = mixedHTML(whole, frac, denom);
   }
 
   function buildCanvas() {
@@ -2614,17 +2718,19 @@ html, body {
     if (mode === '+') {
       const boxCount1 = target.whole1 + (target.frac1 > 0 ? 1 : 0);
       const boxCount2 = target.whole2 + (target.frac2 > 0 ? 1 : 0);
-      canvas.appendChild(buildChainSection('chain1', '①', '#4CAF50', boxCount1));
-      canvas.appendChild(buildChainSection('chain2', '②', '#3B8FE0', boxCount2));
+      canvas.appendChild(buildChainSection('chain1', '①', '#4CAF50', boxCount1, 20, 20, 'add'));
+      canvas.appendChild(buildChainSection('chain2', '②', '#3B8FE0', boxCount2, 20, 220, 'add'));
     } else {
-      const boxCountA = target.wholeA + (target.fracA > 0 ? 1 : 0);
-      canvas.appendChild(buildChainSection('chain1', '①', '#4CAF50', boxCountA));
+      canvas.appendChild(buildChainSection('chain1', '①', '#4CAF50', null, 20, 20, 'sub'));
     }
   }
 
-  function buildChainSection(key, label, color, boxCount) {
+  function buildChainSection(key, label, color, boxCount, defLeft, defTop, kind) {
     const section = document.createElement('div');
     section.className = 'chainSection';
+    section.style.left = defLeft + 'px';
+    section.style.top = defTop + 'px';
+    section.style.zIndex = topZ++;
 
     const handle = document.createElement('div');
     handle.className = 'chainHandle';
@@ -2635,7 +2741,37 @@ html, body {
       '<button class="miniReset" type="button" data-key="' + key + '">↺</button>';
     handle.querySelector('.miniReset').addEventListener('click', (e) => {
       e.stopPropagation();
-      setChainCount(key, 0);
+      resetChainValue(key);
+    });
+
+    // 손잡이를 잡고 드래그해서 다른 도형과 겹쳐 비교할 수 있도록
+    handle.addEventListener('pointerdown', (e) => {
+      if (e.target.classList.contains('miniReset')) return;
+      section.style.zIndex = ++topZ;
+      const canvasRect = canvas.getBoundingClientRect();
+      const rect = section.getBoundingClientRect();
+      const offsetX = e.clientX - rect.left;
+      const offsetY = e.clientY - rect.top;
+      handle.setPointerCapture(e.pointerId);
+
+      function onMove(ev) {
+        let x = ev.clientX - canvasRect.left - offsetX;
+        let y = ev.clientY - canvasRect.top - offsetY;
+        x = Math.max(0, Math.min(canvas.clientWidth - section.offsetWidth, x));
+        y = Math.max(0, Math.min(canvas.clientHeight - section.offsetHeight, y));
+        section.style.left = x + 'px';
+        section.style.top = y + 'px';
+      }
+      function onUp() {
+        handle.removeEventListener('pointermove', onMove);
+        handle.removeEventListener('pointerup', onUp);
+        // 칸 너비(34px) 눈금에 맞춰 x축 스냅
+        let x = parseFloat(section.style.left);
+        const snapped = Math.round(x / 34) * 34;
+        section.style.left = Math.max(0, Math.min(canvas.clientWidth - section.offsetWidth, snapped)) + 'px';
+      }
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onUp);
     });
 
     const row = document.createElement('div');
@@ -2644,8 +2780,19 @@ html, body {
     section.appendChild(handle);
     section.appendChild(row);
 
-    buildChain(row, boxCount, color, key);
+    if (kind === 'sub') {
+      buildSubtractionChain(row, target.wholeA, target.fracA, color, key);
+    } else {
+      buildChain(row, boxCount, color, key);
+    }
+    chains[key].handleEl = handle.querySelector('.cvalue');
     updateChainHandleValue(key);
+
+    section._reset = () => {
+      section.style.left = defLeft + 'px';
+      section.style.top = defTop + 'px';
+    };
+
     return section;
   }
 
@@ -2714,9 +2861,12 @@ html, body {
     label.textContent = '정답:';
     answerBox.appendChild(label);
 
-    // 대분수(자연수+분수)일 때만 두 칸을 함께 보여주고,
-    // 자연수만이거나 분수만이면 해당하는 한 칸만 보여준다.
-    if (ans.whole > 0) {
+    // 자연수 칸은 정답의 자연수 부분이 0보다 클 때만, 분수 칸은 분자가 0보다 클 때만 보여준다.
+    // (분자가 0인 분수 칸은 절대 만들지 않는다 — 대분수일 때만 두 칸이 함께 나온다.)
+    const showWhole = ans.whole > 0;
+    const showFrac = ans.frac > 0;
+
+    if (showWhole) {
       const wholeInput = document.createElement('input');
       wholeInput.type = 'text';
       wholeInput.className = 'ws-input';
@@ -2725,7 +2875,7 @@ html, body {
       answerBox.appendChild(wholeInput);
     }
 
-    if (ans.frac > 0 || ans.whole === 0) {
+    if (showFrac) {
       const fracWrap = document.createElement('span');
       fracWrap.className = 'miniFrac';
       const numInput = document.createElement('input');
@@ -2756,7 +2906,8 @@ html, body {
   }
 
   document.getElementById('fd-resetAllBtn').addEventListener('click', () => {
-    for (const k in chains) setChainCount(k, 0);
+    for (const k in chains) resetChainValue(k);
+    canvas.querySelectorAll('.chainSection').forEach(sec => sec._reset && sec._reset());
     clearCheckResult();
   });
 
