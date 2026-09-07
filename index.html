@@ -1035,20 +1035,20 @@ html, body {
     padding: 24px 16px 40px;
   }
 #page-bunsuds .ws-box {
-    width: 480px;
+    width: 560px;
     max-width: 100%;
     background: #fff;
     border: 3px solid #222;
     border-radius: 6px;
     box-shadow: 5px 5px 0 rgba(0,0,0,0.15);
-    padding: 20px;
+    padding: 22px 24px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 14px;
     font-family: 'DungGeunMo', 'Pretendard', sans-serif;
     font-size: 16px;
-    flex-wrap: wrap;
   }
 #page-bunsuds .ws-input {
     width: 40px;
@@ -1068,6 +1068,107 @@ html, body {
     font-size: 13px;
   }
 #page-bunsuds .miniFrac .bar { width: 100%; border-top: 2px solid #222; margin: 1px 0; }
+#page-bunsuds .procTitle {
+    font-size: 14px;
+    color: #888;
+    letter-spacing: 1px;
+    align-self: flex-start;
+  }
+#page-bunsuds .procNote {
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    color: #b3651f;
+    background: #fff4e8;
+    border: 1px dashed #e0a35c;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: 'Pretendard', sans-serif;
+  }
+#page-bunsuds .procLine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    font-family: 'DungGeunMo', 'Pretendard', sans-serif;
+    font-size: 22px;
+  }
+#page-bunsuds .procCircle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #fbeaea;
+    color: #c23b3b;
+    font-family: 'Pretendard', sans-serif;
+    flex-shrink: 0;
+  }
+#page-bunsuds .procFracDisplay {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #e8f2fd;
+    font-size: 18px;
+  }
+#page-bunsuds .procFracDisplay .fnum,
+#page-bunsuds .procFracDisplay .fden {
+    color: #2f7fd6;
+    font-family: 'Pretendard', sans-serif;
+    padding: 0 3px;
+  }
+#page-bunsuds .procFracDisplay .fbar { width: 100%; border-top: 2px solid #2f7fd6; margin: 2px 0; }
+#page-bunsuds .procInputWhole {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 2px solid #c23b3b;
+    background: #fbeaea;
+    color: #c23b3b;
+    font-family: 'Pretendard', sans-serif;
+  }
+#page-bunsuds .procInputWhole.ws-correct { border-color: #2ba84a; background: #eafbee; color: #2ba84a; }
+#page-bunsuds .procInputWhole.ws-wrong { border-color: #e04b4b; background: #fdecec; color: #e04b4b; }
+#page-bunsuds .procFracInputWrap {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+    font-size: 13px;
+  }
+#page-bunsuds .procFracInputWrap .bar { width: 100%; border-top: 2px solid #222; margin: 3px 0; }
+#page-bunsuds .procInputNum {
+    width: 40px;
+    height: 34px;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 2px solid #2f7fd6;
+    background: #e8f2fd;
+    color: #2f7fd6;
+    font-family: 'Pretendard', sans-serif;
+  }
+#page-bunsuds .procInputNum.ws-correct { border-color: #2ba84a; background: #eafbee; color: #2ba84a; }
+#page-bunsuds .procInputNum.ws-wrong { border-color: #e04b4b; background: #fdecec; color: #e04b4b; }
+#page-bunsuds .procLegend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 12px;
+    color: #888;
+    font-family: 'Pretendard', sans-serif;
+  }
+#page-bunsuds .procLegend .legendItem { display: flex; align-items: center; gap: 5px; }
+#page-bunsuds .legendDotWhole { width: 10px; height: 10px; border-radius: 50%; background: #fbeaea; border: 1px solid #c23b3b; }
+#page-bunsuds .legendDotFrac { width: 10px; height: 10px; border-radius: 2px; background: #e8f2fd; border: 1px solid #2f7fd6; }
 #page-bunsuds #fd-checkBtn {
     margin-top: 18px;
     font-family: 'DungGeunMo', 'Pretendard', sans-serif;
@@ -2349,13 +2450,114 @@ document.addEventListener('pointercancel', function(){ dragCtx = null; });
     return { whole: Math.floor(totalNumer / denom), frac: totalNumer % denom };
   }
 
+  // 뺄셈일 때 받아내림이 필요한지 계산해서 { whole, frac, borrowed } 형태로 돌려준다.
+  // (받아내림이 필요하면 자연수 1을 분수로 바꿔 fracA에 더해준 "계산용" A값을 돌려준다.)
+  function getEffectiveA() {
+    if (target.fracA >= target.fracB) {
+      return { whole: target.wholeA, frac: target.fracA, borrowed: false };
+    }
+    return { whole: target.wholeA - 1, frac: target.fracA + denom, borrowed: true };
+  }
+
+  // 자연수(빨강 원)와 분수(파랑 박스)를 이미지 스타일처럼 색으로 표시하는 헬퍼들
+  function procCircle(n) {
+    const s = document.createElement('span');
+    s.className = 'procCircle';
+    s.textContent = n;
+    return s;
+  }
+
+  function procFracDisplay(num, den) {
+    const s = document.createElement('span');
+    s.className = 'procFracDisplay';
+    s.innerHTML = '<span class="fnum">' + num + '</span><span class="fbar"></span><span class="fden">' + den + '</span>';
+    return s;
+  }
+
+  function opSpan(txt) {
+    const s = document.createElement('span');
+    s.textContent = txt;
+    return s;
+  }
+
+  function procWholeInput(id) {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.inputMode = 'numeric';
+    inp.className = 'procInputWhole';
+    inp.id = id;
+    return inp;
+  }
+
+  function procFracInput(id, den) {
+    const wrap = document.createElement('span');
+    wrap.className = 'procFracInputWrap';
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.inputMode = 'numeric';
+    inp.className = 'procInputNum';
+    inp.id = id;
+    const bar = document.createElement('span');
+    bar.className = 'bar';
+    const denEl = document.createElement('span');
+    denEl.textContent = den;
+    wrap.appendChild(inp);
+    wrap.appendChild(bar);
+    wrap.appendChild(denEl);
+    return wrap;
+  }
+
   function buildAnswerBox() {
     answerBox.innerHTML = '';
     const ans = computeAnswer();
-    const label = document.createElement('span');
-    label.textContent = '정답:';
-    answerBox.appendChild(label);
 
+    const title = document.createElement('div');
+    title.className = 'procTitle';
+    title.textContent = '계산 과정';
+    answerBox.appendChild(title);
+
+    let effA = null;
+    if (mode === '-') {
+      effA = getEffectiveA();
+      if (effA.borrowed) {
+        const note = document.createElement('div');
+        note.className = 'procNote';
+        note.innerHTML = '받아내림: ' + mixedHTML(target.wholeA, target.fracA, denom) + ' = ' +
+          mixedHTML(effA.whole, effA.frac, denom);
+        answerBox.appendChild(note);
+      }
+    }
+
+    const line = document.createElement('div');
+    line.className = 'procLine';
+
+    if (mode === '+') {
+      line.appendChild(procCircle(target.whole1));
+      line.appendChild(procFracDisplay(target.frac1, denom));
+      line.appendChild(opSpan('+'));
+      line.appendChild(procCircle(target.whole2));
+      line.appendChild(procFracDisplay(target.frac2, denom));
+      line.appendChild(opSpan('='));
+      line.appendChild(procWholeInput('fd-procWhole'));
+      line.appendChild(opSpan('+'));
+      line.appendChild(procFracInput('fd-procNum', denom));
+    } else {
+      line.appendChild(procCircle(effA.whole));
+      line.appendChild(procFracDisplay(effA.frac, denom));
+      line.appendChild(opSpan('-'));
+      line.appendChild(procCircle(target.wholeB));
+      line.appendChild(procFracDisplay(target.fracB, denom));
+      line.appendChild(opSpan('='));
+      line.appendChild(procWholeInput('fd-procWhole'));
+      // 자연수끼리 뺀 값과 분수끼리 뺀 값은 하나의 대분수(자연수+분수)를 이루므로
+      // 여기서는 원래 연산(-)이 아니라 항상 '+'로 이어준다. (예: 3 - 1/3 이 아니라 3 + 1/3 = 3 1/3)
+      line.appendChild(opSpan('+'));
+      line.appendChild(procFracInput('fd-procNum', denom));
+    }
+
+    line.appendChild(opSpan('='));
+
+    // ----- 최종 정답 (받아올림/받아내림까지 마친 대분수, 색 없이 표시) -----
     // 자연수 칸은 정답의 자연수 부분이 0보다 클 때만, 분수 칸은 분자가 0보다 클 때만 보여준다.
     // (분자가 0인 분수 칸은 절대 만들지 않는다 — 대분수일 때만 두 칸이 함께 나온다.)
     const showWhole = ans.whole > 0;
@@ -2367,7 +2569,7 @@ document.addEventListener('pointercancel', function(){ dragCtx = null; });
       wholeInput.className = 'ws-input';
       wholeInput.id = 'fd-ansWhole';
       wholeInput.inputMode = 'numeric';
-      answerBox.appendChild(wholeInput);
+      line.appendChild(wholeInput);
     }
 
     if (showFrac) {
@@ -2387,12 +2589,21 @@ document.addEventListener('pointercancel', function(){ dragCtx = null; });
       fracWrap.appendChild(numInput);
       fracWrap.appendChild(bar);
       fracWrap.appendChild(denEl);
-      answerBox.appendChild(fracWrap);
+      line.appendChild(fracWrap);
     }
+
+    answerBox.appendChild(line);
+
+    const legend = document.createElement('div');
+    legend.className = 'procLegend';
+    legend.innerHTML =
+      '<span class="legendItem"><span class="legendDotWhole"></span>자연수끼리</span>' +
+      '<span class="legendItem"><span class="legendDotFrac"></span>분자끼리</span>';
+    answerBox.appendChild(legend);
   }
 
   function clearCheckResult() {
-    ['fd-ansWhole', 'fd-ansNum'].forEach(id => {
+    ['fd-procWhole', 'fd-procNum', 'fd-ansWhole', 'fd-ansNum'].forEach(id => {
       const el = document.getElementById(id);
       if (el) { el.value = ''; el.classList.remove('ws-correct', 'ws-wrong'); }
     });
@@ -2409,6 +2620,35 @@ document.addEventListener('pointercancel', function(){ dragCtx = null; });
   document.getElementById('fd-checkBtn').addEventListener('click', () => {
     const ans = computeAnswer();
     let allCorrect = true;
+
+    // 계산 과정: 자연수 부분
+    let procWholeExpected, procNumExpected;
+    if (mode === '+') {
+      procWholeExpected = target.whole1 + target.whole2;
+      procNumExpected = target.frac1 + target.frac2;
+    } else {
+      const effA = getEffectiveA();
+      procWholeExpected = effA.whole - target.wholeB;
+      procNumExpected = effA.frac - target.fracB;
+    }
+
+    const procWholeEl = document.getElementById('fd-procWhole');
+    if (procWholeEl) {
+      const raw = procWholeEl.value.trim();
+      const ok = raw !== '' && parseInt(raw, 10) === procWholeExpected;
+      procWholeEl.classList.toggle('ws-correct', ok);
+      procWholeEl.classList.toggle('ws-wrong', !ok);
+      if (!ok) allCorrect = false;
+    }
+
+    const procNumEl = document.getElementById('fd-procNum');
+    if (procNumEl) {
+      const raw = procNumEl.value.trim();
+      const ok = raw !== '' && parseInt(raw, 10) === procNumExpected;
+      procNumEl.classList.toggle('ws-correct', ok);
+      procNumEl.classList.toggle('ws-wrong', !ok);
+      if (!ok) allCorrect = false;
+    }
 
     const wholeEl = document.getElementById('fd-ansWhole');
     if (wholeEl) {
